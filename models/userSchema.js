@@ -1,27 +1,24 @@
 const mongoose = require('mongoose');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { isEmail }  = require ('validator');
 var integerValidator = require('mongoose-integer');
 
 //user schcema or Document structure
 const  userSchema =  new mongoose.Schema({
-    firstName : {
+    username : {
         type : String,
         required : true,
         unique : true
         },
 
-        lastName : {
-            type : String,
-            required : true,
-            unique : true
-            },
-
+    
         email : {
         type : String,
         required : true,
+        validate: [ isEmail],
         unique : true,
-        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+         
         },
         password : {
         type : String,
@@ -79,4 +76,3 @@ userSchema.pre('save',async function(next){
 
 module.exports = Users;
 
-//export default mongoose.model("Users",userSchema);
