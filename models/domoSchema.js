@@ -6,8 +6,8 @@ const  domoSchema =  new mongoose.Schema({
 
     title : {
         type : String,
-        required : true,
-       unique : true
+        //required : true,
+         unique : true
         },
 
     addresse : {
@@ -91,10 +91,6 @@ const  domoSchema =  new mongoose.Schema({
             type : Boolean ,
                   },         
               
-              
-
-    
-      
       user : {
       type : mongoose.Schema.Types.ObjectId,
       ref : "Users",
