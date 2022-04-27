@@ -2,66 +2,78 @@ const mongoose = require('mongoose');
 //const bcryptjs = require('bcryptjs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { isEmail }  = require ('validator');
+const { isEmail } = require('validator');
 var integerValidator = require('mongoose-integer');
 
 //user schcema or Document structure
-const  userSchema =  new mongoose.Schema({
-    userName : {
-        type : String,
-        required : true,
-        unique : true
-        },
-
-    
-        email : {
-        type : String,
-        required : true,
-        validate: [ isEmail],
-        unique : true,
-         
-        },
-        password : {
-        type : String,
-        required : true 
-        },
-
-        phone  : {
-            type: String,
-            match: /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/
-            },
+const userSchema = new mongoose.Schema({
+    userName: {
+        type: String,
+        required: false,
+        unique: true
+    },
 
 
-    })
- 
+    email: {
+        type: String,
+        required: true,
+        validate: [isEmail],
+        unique: true,
 
- 
+    },
+    password: {
+        type: String,
+        required: true
+    },
 
-// play function before save into display: 'block',
-userSchema.pre("save", async function(next) {
-    const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  });
+    phone: {
+        type: String,
+        match: /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/
+    },
 
 
+    tokens: [
 
-userSchema.statics.login = async function(email, password) {
-  const user = await this.findOne({ email });
-  if (user) {
-    const auth = await bcrypt.compare(password, user.password);
-    if (auth) {
-      return user;
+        {
+            token: {
+                type: String,
+                required: true
+            }
+        }
+    ]
+
+
+})
+
+
+//hashing password to secure
+userSchema.pre('save', async function (next) {
+    if (this.isModified('password')) {
+        this.password = bcryptjs.hashSync(this.password, 10)
     }
-    throw Error('incorrect password');
-  }
-  throw Error('incorrect email')
-};
+    next()
+})
 
- userSchema.plugin(integerValidator);
- 
- // Create Model
- const Users = new mongoose.model("USER",userSchema);
+//Generate Token to Verify User
+userSchema.methods.generateToken = async function () {
+    try {
+
+        let generatedToken = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);
+        this.tokens = this.tokens.concat({ token: generatedToken });
+        await this.save();
+        return generatedToken;
+
+    } catch (error) {
+        console.log(error)
+
+    }
+
+}
+
+userSchema.plugin(integerValidator);
+
+// Create Model
+const Users = new mongoose.model("USER", userSchema);
 
 module.exports = Users;
 

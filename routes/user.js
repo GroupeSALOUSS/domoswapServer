@@ -13,10 +13,10 @@ router.post('/login', authController.logIn);
 router.get('/logout', authController.logOut);
 
 //userdb
-router.get('/', userController.getAllUsers);
-router.get('/:id', userController.userInfo);
-router.put('/:id', userController.updateUser);
-router.delete('/:id', userController.deleteUser);
+router.get('/user', userController.getAllUsers);
+router.get('/user/:id', userController.userInfo);
+router.put('/user/:id', userController.updateUser);
+router.delete('/user/:id', userController.deleteUser);
 
 
 
