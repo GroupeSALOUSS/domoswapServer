@@ -12,9 +12,6 @@ const positionSchema = new mongoose.Schema({
     }
   });
   
-
-
-
 const Positions = new mongoose.model("POSITION",positionSchema );
 
 

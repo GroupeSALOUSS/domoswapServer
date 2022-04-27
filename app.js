@@ -4,6 +4,7 @@ const dotenv  = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 //Configure ENV file 
 dotenv.config({path:'./config.env'});
@@ -27,7 +28,7 @@ app.get('/',(req,res)=>{
    res.send("Hello world");
   })
 
-
+app.use(cors());
 
 app.use('/users',userRoute);
 app.use('/domos',domoRoute);
