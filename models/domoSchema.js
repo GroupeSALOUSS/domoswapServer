@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var integerValidator = require('mongoose-integer');
+const geocoder = require('../utils/geocoder.js');
 
 //user schcema or Document structure
 const  domoSchema =  new mongoose.Schema({
@@ -10,14 +11,21 @@ const  domoSchema =  new mongoose.Schema({
          unique : true
         },
 
-    addresse : {
-                
-            street: String,
-             city: String,
-             state: String,
-             zip: String
-    
+        address: {
+            type: String,
+            //required: [true, 'Please add an address']
+          },
+          location: {
+            type: {
+              type: String,
+              enum: ['Point']
             },
+            coordinates: {
+              type: [Number],
+              index: '2dsphere'
+            },
+            formattedAddress: String
+          },
 
         arrivalDate : {type : Date,
                 required : false,
@@ -45,27 +53,23 @@ const  domoSchema =  new mongoose.Schema({
 
     bedrooms : {
         type : Number ,
-        intger : true
+        integer : true
         },
 
     bathrooms : {
             type : Number ,
-            intger : true
+            integer : true
             },
 
     beds : {
      type : Number ,
-     intger : true
+     integer : true
             },
   
-      images :{
-       data: Buffer,
-       contentType: String
-       //Type : String
+      imageUrl :{
+       Type : String
        } ,
       
-       
-
        tv : {
             type : Boolean ,
             },
@@ -100,7 +104,23 @@ const  domoSchema =  new mongoose.Schema({
 
 })
 
-domoSchema.plugin(integerValidator);
 
-const Domos = new mongoose.model("DOMO",domoSchema);
-module.exports = Domos;
+// Geocode & create location
+domoSchema.pre('save', async function(next) {
+    const loc = await geocoder.geocode(this.address);
+    console.log(loc);
+    this.location = {
+      type: 'Point',
+      coordinates: [loc[0].longitude, loc[0].latitude],
+      formattedAddress: loc[0].formattedAddress
+    };
+  
+    // Do not save address
+    this.address = undefined;
+    next();
+  });
+
+  domoSchema.plugin(integerValidator);
+  
+
+module.exports = new mongoose.model("DOMO",domoSchema);
