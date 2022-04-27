@@ -5,7 +5,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {checkUser, requireAuth} = require('./middleware/auth');
 const cookieParser = require('cookie-parser');
-const cors = require('cors');
 
 //Configure ENV file 
 dotenv.config({path:'./config.env'});
