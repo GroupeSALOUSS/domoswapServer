@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var integerValidator = require('mongoose-integer');
+const geocoder = require('../utils/geocoder.js');
 
 //user schcema or Document structure
 const domoSchema = new mongoose.Schema({
@@ -102,7 +103,6 @@ const domoSchema = new mongoose.Schema({
 
 })
 
-domoSchema.plugin(integerValidator);
 
 const Domos = new mongoose.model("DOMO", domoSchema);
 module.exports = Domos;

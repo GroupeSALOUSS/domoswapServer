@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router()
 const domoController = require('../controllers/domo');
 const auth = require('../middleware/auth');
-
+//const  multer  = require('../middleware/multer-config');
 
 router.post('/n', auth.checkUser,domoController.domoCreate);
 

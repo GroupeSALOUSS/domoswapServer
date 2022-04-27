@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const bcryptjs = require('bcryptjs');
+//const bcryptjs = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { isEmail } = require('validator');
 var integerValidator = require('mongoose-integer');

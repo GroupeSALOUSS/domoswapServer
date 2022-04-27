@@ -10,6 +10,7 @@ module.exports.getAllUsers = async (req, res) => {
 
 }
 
+<<<<<<< HEAD
 
 module.exports.userInfo = async (req, res) => {
 
@@ -39,6 +40,23 @@ module.exports.updateUser = async (req, res) => {
           email: req.body.email,
           password: req.body.password,
           phone: req.body.phone,
+=======
+module.exports.updateUser  = async (req, res) => {
+    if (!objectID.isValid(req.params.id))
+      return res.status(400).send("ID invalid : " + req.params.id);
+  
+    try {
+      await Users.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          $set: {
+                  userName : req.body.userName,
+                  email  : req.body.email ,
+                  password : req.body.password,  
+                  phone  : req.body.phone ,
+                  
+          },
+>>>>>>> c5e20af3456dba29ec2a28719a8456bd70e96e95
         },
       },
       { new: true, upsert: true, setDefaultsOnInsert: true }
