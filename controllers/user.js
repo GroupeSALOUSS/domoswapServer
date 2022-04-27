@@ -35,7 +35,7 @@ module.exports.updateUser  = async (req, res) => {
         { _id: req.params.id },
         {
           $set: {
-                  username : req.body.username,
+                  userName : req.body.userName,
                   email  : req.body.email ,
                   password : req.body.password,  
                   phone  : req.body.phone ,

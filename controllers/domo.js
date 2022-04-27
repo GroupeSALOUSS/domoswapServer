@@ -4,29 +4,32 @@ const Domos = require('../models/domoSchema');
 const objectID = require('mongoose').Types.ObjectId;
 
 module.exports.domoCreate = async (req,res) =>{
+
+ 
    try{
 
-   const  title = req.body.title;
-    const bedrooms = req.body.bedrooms;
-    const bathrooms =req.body.bathrooms;  
-    const  beds = req.body.beds;
-    const homeType = req.body.homeType;
-    const residenceType = req.body.residenceType;
-    const arrivalDate = req.body.arrivalDate;
-    const  departureDate = req.body. departureDate;
-      
-     // console.log(req.file.path);
+      const  title = req.body.title;
+      const address = req.body.address;
+      const bedrooms = req.body.bedrooms;
+      const bathrooms =req.body.bathrooms;  
+      const  beds = req.body.beds;
+      const homeType = req.body.homeType;
+      const residenceType = req.body.residenceType;
+      const arrivalDate = req.body.arrivalDate;
+      const  departureDate = req.body. departureDate;  
+       
+    
       const domo = new Domos({
-         title : title,
-         bedrooms : bedrooms ,
-         bathrooms :  bathrooms ,
-         beds : beds,
-         homeType : homeType ,
-         residenceType : residenceType,
+          title : title,
+          address: address,
+          bedrooms : bedrooms,
+          bathrooms :  bathrooms ,
+          beds : beds,
+          homeType : homeType ,
+          residenceType : residenceType,
          arrivalDate : arrivalDate,
-         departureDate  : departureDate,
-         user : req.user._id,
-         
+         departureDate  : departureDate, 
+        // user: user._id
       })
 
       const domoCre = await domo.save();
@@ -35,6 +38,7 @@ module.exports.domoCreate = async (req,res) =>{
 
    }catch(error){
         res.status(400).send(error)
+        console.log(error);
       
     }
   
@@ -71,6 +75,7 @@ module.exports.updateDomo = async (req, res) => {
       {
         $set: {
                 title : req.body.title,
+                address : req.body.address,
                 bedrooms : req.body.bedrooms,
                  bathrooms : req.body.bathrooms,  
                  beds : req.body.beds,

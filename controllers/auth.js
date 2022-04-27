@@ -1,20 +1,28 @@
 
-const bcryptjs = require('bcryptjs');
+//const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Users = require('../models/userSchema');
 
+
+const maxAge = 3 * 24 * 60 * 60 * 1000;
+
+const createToken = (id) => {
+  return jwt.sign({id}, process.env.TOKEN_SECRET, {
+    expiresIn: maxAge
+  })
+};
 
 
 module.exports.signUp = async (req,res)=>{
     try{
        //Get body or data
-      const username = req.body.username
+      const userName = req.body.userName
       const phone = req.body.phone;
       const email = req.body.email;
       const password = req.body.password;
    
       const createUser = new Users({
-        username : username,
+        userName : userName,
          email : email,
          phone :  phone,
          password : password
@@ -31,7 +39,7 @@ module.exports.signUp = async (req,res)=>{
  }
 
 
- module.exports.logIn = async (req,res)=>{
+ /*module.exports.logIn = async (req,res)=>{
   try{
      const email = req.body.email;
      const password = req.body.password;
@@ -66,7 +74,25 @@ module.exports.signUp = async (req,res)=>{
    
  }
 
-  }
+  }*/
+
+
+  module.exports.logIn =  async (req, res) => {
+   const { email, password } = req.body
+ 
+   try {
+     const user = await Users.login(email, password);
+     const token = createToken(user._id);
+     res.cookie('jwt', token, { httpOnly: true, maxAge});
+     res.status(200).send('logged in')
+   } catch (err){
+     const errors = signInErrors(err);
+     res.status(200).json({ errors });
+   }
+ }
+
+
+
 
   module.exports.logOut = async (req,res)=>{
    res.cookie('jwt','',{maxAge : 1});
